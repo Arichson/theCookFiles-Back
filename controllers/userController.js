@@ -61,6 +61,16 @@ router.get('/:username/recipes/', async (req, res) => {
         })
     }
 })
+router.post('/:username/recipes', async (req,res) => {
+    try { 
+        const createRecipe = await Recipes.create(req.body)
+        res.status(200).json(createRecipe)
+    } catch(err){
+        res.status(400).json({
+            msg: err.message
+        })
+    }
+})
 router.post('/:username/recipes/:id', async (req, res) => {
     const recipeQuery = Recipes.findOne({_id:req.params.id})
     // console.log(recipeQuery)
@@ -89,15 +99,6 @@ router.post('/:username/recipes/:id', async (req, res) => {
             })
         }
     })
-
-    // try { 
-    //     const createRecipe = await Recipes.create(req.body)
-    //     res.status(200).json(createRecipe)
-    // } catch(err){
-    //     res.status(400).json({
-    //         msg: err.message
-    //     })
-    // }
 })
 router.get('/:username/recipes/:id', async (req, res) => {
     try {
@@ -114,6 +115,17 @@ router.delete('/:username/recipes/:id', auth, async (req, res) => {
     try {
         const deletedRecipes = await Recipes.findByIdAndDelete(req.params.id);
         res.status(200).json(deletedRecipes);
+    } catch (error) {
+        res.status(400).json({
+            msg: error.message
+        })
+    }
+})
+
+router.delete('/:id', auth, async (req, res) => {
+    try {
+        const deleteUser = await User.findByIdAndDelete(req.params.id);
+        res.status(200).json(deleteUser);
     } catch (error) {
         res.status(400).json({
             msg: error.message
